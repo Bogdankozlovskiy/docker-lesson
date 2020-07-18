@@ -27,12 +27,29 @@ class Event(models.Model):
     )
     date_stop = models.DateTimeField(
         verbose_name="окончание события",
-        blank=True
+        blank=True,
+        null=True
     )
     reminder = models.DurationField(
         verbose_name="напомнить за...",
         choices=choice_delta
     )
+    tmp_duration_field = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # @property
+    # def tmp_duration_field(self):
+        # return self.reminder4api
+
+    @property
+    def reminder4api(self):
+        for i in self.choice_delta:
+            if self.reminder == i[0]:
+                return i[1]
+        return "not found"
 
     def __str__(self):
         return self.title
@@ -44,4 +61,8 @@ class Event(models.Model):
                 minute=59,
                 second=59
             )
+        if self.tmp_duration_field is not None:
+            for i in self.choice_delta:
+                if self.tmp_duration_field == i[1]:
+                    self.reminder = i[0]
         super().save(**kwargs)
