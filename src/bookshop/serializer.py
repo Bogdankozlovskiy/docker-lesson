@@ -11,10 +11,15 @@ class EventSerializer(ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ("title", "date_start", "date_stop", "tmp_duration")
+        fields = (
+            "title",
+            "date_start",
+            "date_stop",
+            "tmp_duration",
+            "need_remind"
+        )
 
     def save(self, *args, **kwargs):
-        # logger.warning(str(self.validated_data))
         for item in CHOICE_DELTA:
             if self.validated_data["reminder4api"] == item[1]:
                 self.validated_data["reminder"] = item[0]

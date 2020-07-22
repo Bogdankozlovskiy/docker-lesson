@@ -35,6 +35,10 @@ class Event(models.Model):
         verbose_name="напомнить за...",
         choices=choice_delta
     )
+    need_remind = models.BooleanField(
+        verbose_name="Напомнить?",
+        default=False
+    )
 
     @property
     def reminder4api(self):
