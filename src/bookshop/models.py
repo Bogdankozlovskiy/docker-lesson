@@ -1,13 +1,15 @@
 from django.db import models
 from logging import getLogger
 from datetime import timedelta
+from django.contrib.auth.models import User
+
 
 logger = getLogger("django")
 CHOICE_DELTA = [
-        (timedelta(hours=1), "За час",),
+        (timedelta(hours=1),   "За час",),
         (timedelta(hours=2), "За 2 часа"),
         (timedelta(hours=4), "За 4 часа"),
-        (timedelta(days=1), "За день"),
+        (timedelta(days=1),    "За день"),
         (timedelta(weeks=1), "За неделю"),
 ]
 
@@ -19,6 +21,12 @@ class Event(models.Model):
         db_table = "my_event"
 
     choice_delta = CHOICE_DELTA
+    user_event = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="user",
+        verbose_name="чье событие",
+    )
     title = models.CharField(
         max_length=100,
         verbose_name="название события"
