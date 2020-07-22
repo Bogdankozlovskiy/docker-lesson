@@ -3,6 +3,13 @@ from logging import getLogger
 from datetime import timedelta
 
 logger = getLogger("django")
+CHOICE_DELTA = [
+        (timedelta(hours=1), "За час",),
+        (timedelta(hours=2), "За 2 часа"),
+        (timedelta(hours=4), "За 4 часа"),
+        (timedelta(days=1), "За день"),
+        (timedelta(weeks=1), "За неделю"),
+]
 
 
 class Event(models.Model):
@@ -11,13 +18,7 @@ class Event(models.Model):
         verbose_name = "событие"
         db_table = "my_event"
 
-    choice_delta = [
-        (timedelta(hours=1), "За час",),
-        (timedelta(hours=2), "За 2 часа"),
-        (timedelta(hours=4), "За 4 часа"),
-        (timedelta(days=1), "За день"),
-        (timedelta(weeks=1), "За неделю"),
-    ]
+    choice_delta = CHOICE_DELTA
     title = models.CharField(
         max_length=100,
         verbose_name="название события"
@@ -34,15 +35,6 @@ class Event(models.Model):
         verbose_name="напомнить за...",
         choices=choice_delta
     )
-    tmp_duration_field = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    # @property
-    # def tmp_duration_field(self):
-        # return self.reminder4api
 
     @property
     def reminder4api(self):
@@ -61,8 +53,4 @@ class Event(models.Model):
                 minute=59,
                 second=59
             )
-        if self.tmp_duration_field is not None:
-            for i in self.choice_delta:
-                if self.tmp_duration_field == i[1]:
-                    self.reminder = i[0]
         super().save(**kwargs)
