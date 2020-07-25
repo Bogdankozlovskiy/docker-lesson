@@ -25,7 +25,7 @@ class Event(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="user",
-        verbose_name="чье событие",
+        verbose_name="чье событие"
     )
     title = models.CharField(
         max_length=100,

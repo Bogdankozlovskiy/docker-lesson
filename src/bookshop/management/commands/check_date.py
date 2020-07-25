@@ -1,7 +1,8 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from bookshop.models import Event
 from logging import getLogger
 from datetime import datetime
+from django.core.mail import send_mail
 
 
 logger = getLogger("django")
