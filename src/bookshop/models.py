@@ -66,3 +66,27 @@ class Event(models.Model):
                 second=59
             )
         super().save(**kwargs)
+
+
+class Holiday(models.Model):
+    class Meta:
+        verbose_name = "праздник"
+        verbose_name_plural = "праздники"
+
+    title = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="название праздника"
+    )
+    date_start = models.DateTimeField(
+        verbose_name="дата начала праздника"
+    )
+    duration = models.DurationField(
+        verbose_name="длительность праздника"
+    )
+    description = models.TextField(
+        verbose_name="описание праздника"
+    )
+
+    def __str__(self):
+        return self.title

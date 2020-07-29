@@ -1,10 +1,10 @@
 from django.contrib import admin
-from bookshop.models import Event
+from bookshop.models import Event, Holiday
 
 
 class EventAdmin(admin.ModelAdmin):
-    # fields = ("title", "date_start", "date_stop", "reminder")
     exclude = ("tmp_duration_field", )
 
 
 admin.site.register(Event, EventAdmin)
+admin.site.register(Holiday)
