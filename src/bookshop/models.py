@@ -1,7 +1,7 @@
 from django.db import models
 from logging import getLogger
 from datetime import timedelta
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
 logger = getLogger("django")
@@ -12,6 +12,14 @@ CHOICE_DELTA = [
         (timedelta(days=1),    "За день"),
         (timedelta(weeks=1), "За неделю"),
 ]
+
+
+class User(AbstractUser):
+    country = models.ForeignKey(
+        "bookshop.country",
+        on_delete=models.CASCADE,
+        null=True 
+    )
 
 
 class Event(models.Model):
@@ -78,7 +86,7 @@ class Holiday(models.Model):
         unique=True,
         verbose_name="название праздника"
     )
-    date_start = models.DateTimeField(
+    date_start = models.DateField(
         verbose_name="дата начала праздника"
     )
     duration = models.DurationField(
@@ -87,6 +95,18 @@ class Holiday(models.Model):
     description = models.TextField(
         verbose_name="описание праздника"
     )
-
+    country = models.ForeignKey("bookshop.country", on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.title
+
+
+class Country(models.Model):
+    class Meta:
+        verbose_name = "страна"
+        verbose_name_plural = "Страны"
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+

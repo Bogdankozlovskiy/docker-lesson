@@ -1,4 +1,4 @@
-from bookshop.models import Event, CHOICE_DELTA
+from bookshop.models import Event, Holiday, Country, CHOICE_DELTA
 from rest_framework.serializers import ModelSerializer,  CharField
 from logging import getLogger
 
@@ -26,3 +26,16 @@ class EventSerializer(ModelSerializer):
         del self.validated_data["reminder4api"]
         self.validated_data.update(kwargs)
         super().save(*args, **kwargs)
+
+
+class CountrySerializer(ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ["name"]
+
+
+class HolidaySerializer(ModelSerializer):
+    country = CountrySerializer
+    class Meta:
+        model = Holiday
+        fields = ["title", "date_start", "duration", "description", "country"]
