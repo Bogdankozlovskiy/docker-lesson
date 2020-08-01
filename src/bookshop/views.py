@@ -6,11 +6,11 @@ from rest_framework.generics import (
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from bookshop.serializer import EventSerializer, HolidaySerializer
-from bookshop.models import Event, Holiday, CHOICE_DELTA
+from bookshop.models import Event, Holiday, Country, CHOICE_DELTA
 from django.db.models import Q
 from logging import getLogger
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated
@@ -81,18 +81,42 @@ class GetEvents(APIView):
         return Response(serializer.data)
 
 
-class GetToken(APIView):
+class Sign(APIView):
     def post(self, request):
-        user = User.objects.get_or_create(
+        if not User.objects.filter(username=request.data['username']):
+            user = User.objects.create_user(
                 username=request.data["username"],
                 password=request.data["password"],
                 email=request.data["email"],
-                country=request.data["country"]
+                country=Country.objects.get(name=request.data["country"])
                 )
-        token = Token.objects.get_or_create(user=user[0])
+            token = Token.objects.create(user=user)
+            send_mail(
+            "this is your token",
+            f"token: {token.key}",
+            "akademiynauk3@gmail.com",
+            [request.data["email"]],
+            fail_silently=True
+            )
+            return Response("please receive your token")
+        return Response("this username already exist")
+
+
+
+class GetToken(APIView):
+    def post(self, request):
+        user = authenticate(
+                username=request.data["username"],
+                password=request.data["password"],
+                email=request.data["email"],
+                country=Country.objects.get(name=request.data["country"])
+                )
+        if not user:
+            return Response("this user does not exist")
+        token = Token.objects.get(user=user)
         send_mail(
             "this is your token",
-            f"token: {token[0].key}",
+            f"token: {token.key}",
             "akademiynauk3@gmail.com",
             [request.data["email"]],
             fail_silently=True
