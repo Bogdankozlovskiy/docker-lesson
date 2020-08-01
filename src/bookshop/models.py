@@ -17,8 +17,7 @@ CHOICE_DELTA = [
 class User(AbstractUser):
     country = models.ForeignKey(
         "bookshop.country",
-        on_delete=models.CASCADE,
-        null=True 
+        on_delete=models.CASCADE
     )
 
 
