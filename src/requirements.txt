@@ -9,7 +9,7 @@ requests==2.21.0
 bs4==0.0.1
 
 gevent==1.4.0
-eventlet==0.25.1
+eventlet==0.31.0
 redis==3.3.11
 Pygments==2.5.2
 kombu==4.6.6
